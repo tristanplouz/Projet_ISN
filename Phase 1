@@ -1,0 +1,29 @@
+1.Problématique
+  1.1.Analyse
+    a.Objectif:
+      Bataile de robots avec des lasers controlés avec un smartphone.
+    b.Critères importants
+      Robot(s) qui fonctionne(nt)
+      Contrôlé par une application smartphone
+      Connectione entre robot et smartphone
+      Recevoir et emettre une attaque
+    c.Solution
+      Une arduino pour le robot
+      Une connection bluetooth pour communiquer
+      Une application si possible avec le giroscope
+    d.Connaissance
+      Arduino
+      Java/processing pour l'application
+      Mecanique/electronique
+  1.2.Strategie
+    a.Aborder
+      
+    b.Proceder
+      Mise en place du github
+      Arduino
+      Android studio
+      Materiel
+    c.Commencer
+      Le plus vite pour les commandes
+    d.Controler
+     Si ça marche
