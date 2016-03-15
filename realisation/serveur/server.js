@@ -1,25 +1,29 @@
 var http = require('http');
 var fs = require('fs');
+
+// UNCOMMENT IF NO APACHE SERVER Chargement du fichier index.html affiché au client
+/*var server = http.createServer(function(req, res) {
+    fs.readFile('./index.html', 'utf-8', function(error, content) {
+        res.writeHead(200, {"Content-Type": "text/html"});
+        res.end(content);
+    });
+});*/
+
+// Chargement de socket.io
 var io = require('socket.io').listen(server);
 
-var server = http.createServer(function(req, res) {
-//	res.writeHead(200, {'Content-Type':'text/plain'});
-        fs.readFile( '../client/index.html', function(err, data){ 
-
-      if ( err ){ 
-	res.writeHead(404, {'Content-Type': 'text/plain'}); 
-	res.end('Erreur 404: Fichier non trouvé\n'); 
-      } else { 
-	  res.writeHead(200, {'Content-Type': 'text/html' }); 
-	  // retourne le fichier trouvé 
-	  res.end( data ); 
-      } 
-    }); 
-}).listen(8080);
-
-io.sockets.on('connection', function(socket){
-  console.log('a user connected');
+// Quand un client se connecte, on le note dans la console
+io.sockets.on('connection', function (socket) {
+    console.log('Un client est connecté !'+socket.toString());
+    socket.emit("msg","cc",function(){
+		console.log("send to "+socket);
+		});
+    socket.on("gyro",function(data){
+			console.log(data.beta);
+	});
 });
 
 
-console.log("listening on 8080 at localhost");
+server.listen(8080);
+
+console.log("Server listen at "+server.address().port);
