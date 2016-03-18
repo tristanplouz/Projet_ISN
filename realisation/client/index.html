@@ -6,9 +6,14 @@
 </head>
 <body>
 	<div id="gyro"></div>
+	<input type="text" id="ip"></input>
+	<button onclick="connect()"></button>
 </body>
-	<script src="/libs/socket.js"></script>
+	<script src="./libs/socket.io.js"></script>
 	<script type="text/javascript">
-		var socket = io.connect('http://localhost:8080');
+		function connect(){
+			var ip=document.getElementById("ip");
+			var socket = io.connect('http://'+ip.value+':8080');
+		}
 	</script>
 </html>

@@ -8,6 +8,7 @@ var fs = require('fs');
         res.end(content);
     });
 });*/
+var server = http.createServer();
 
 // Chargement de socket.io
 var io = require('socket.io').listen(server);
