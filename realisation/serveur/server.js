@@ -12,13 +12,11 @@ var server = http.createServer();
 
 // Chargement de socket.io
 var io = require('socket.io').listen(server);
-
+var arduinoDisp={arduino:["une","deux"]};
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (socket) {
-    console.log('Un client est connecté !'+socket.toString());
-    socket.emit("msg","cc",function(){
-		console.log("send to "+socket);
-		});
+    console.log('Un client est connecté !'+socket.id);
+    socket.emit("accueil",arduinoDisp);
     socket.on("gyro",function(data){
 			console.log(data.beta);
 	});
