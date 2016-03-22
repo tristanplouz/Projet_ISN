@@ -1,15 +1,21 @@
-		
-	document.getElementById("ip").value = document.location.href; 
+	var ip = document.getElementById("ip");
+	var url = document.location.href;
 
+	var urlip = url.substring(8, url.indexOf("/"));
+
+	ip.value = urlip;
 
 	var socket;
 	function connect(){
-		var ip = document.getElementById("ip");
 		socket = io.connect('http://'+ip.value+':8080');
 	}
 
 	socket.on("accueil", function(content){
 		console.log(content.arduino);
+	});
+
+	socket.on("shutdown", function(){
+		socket.close();
 	});
 
 	gyro.frequency = 500;
