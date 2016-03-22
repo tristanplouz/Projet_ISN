@@ -7,34 +7,10 @@
 <body>
 	<div id="gyro"></div>
 	<div id="visu" style="height:250px; width:40%; background-color:blue; margin: auto;"></div>
-	<input type="text" id="ip" value="localhost"></input>
+	<input type="text" id="ip"></input>
 	<button onclick="connect()">GO</button>
 </body>
 	<script src="./libs/gyro.js"></script>
 	<script src="./libs/socket.io.js"></script>
-	<script type="text/javascript">
-		var socket;
-		function connect(){
-			var ip=document.getElementById("ip");
-			socket = io.connect('http://'+ip.value+':8080');
-		}
-		gyro.frequency = 500;
-		gyro.startTracking(function(g){
-			var f = document.getElementById("gyro");
-			var v = document.getElementById("visu")
-			f.innerHTML =
-                "<p>alpha : "+g.alpha+"</p>"+
-                "<p>beta : "+g.beta+"</p>"+
-                "<p>gamma : "+g.gamma+"</p>";
-			v.style.transform = "rotate("+g.beta+"deg)";
-			console.log(socket);
-			if(!(socket === undefined)){
-				console.log("send");
-				socket.emit("gyro", {alpha:g.alpha, beta:g.beta, gamma:g.gamma})
-			}
-			else{
-				console.log("notsend");
-				}
-		});
-	</script>
+	<script type="./js/script.js"></script>
 </html>
