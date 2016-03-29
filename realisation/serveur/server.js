@@ -16,12 +16,9 @@ var arduinoDisp={arduino:["une","deux"]};
 var connected =[];
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (client) {
-	connected.push({"id":client.id,"name":undefined});
+	connected.push({"id":client.id,"name":undefined,"arduino":undefined});
 	console.log("Un client est connecté ! Il s'agit de " + connected[connected.length-1].id + " appelé " +connected[connected.length-1].name);
-	client.emit("welcome","lol",function(e){
-			console.log("Send something");
-	});
-    
+	client.emit('welcome', { hello: 'world' });
     client.on("gyro",function(data){
 			console.log(data.beta);
 	});
