@@ -1,5 +1,7 @@
 var http = require('http');
 var fs = require('fs');
+var dgram = require('dgram');
+var udp = dgram.createSocket('udp4');
 
 // UNCOMMENT IF NO APACHE SERVER Chargement du fichier index.html affiché au client
 /*var server = http.createServer(function(req, res) {
@@ -21,7 +23,7 @@ io.sockets.on('connection', function (client) {
 	client.emit('welcome', "Quel est votre pseudo:");
 	client.on("username",function(data){
 		pseudo=data.name;
-		connected.push({id :code,name:pseudo);
+		connected.push({id :code,name:pseudo});
 		console.log("Un client est connecté ! Il s'agit de " + connected[connected.length-1].id+ " appelé " +connected[connected.length-1].name);
 	});
     client.on("gyro",function(data){
