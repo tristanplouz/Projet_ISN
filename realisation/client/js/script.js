@@ -1,8 +1,10 @@
 var socket = io.connect(document.location.href.slice(0,20) + ":8080");
 alert(document.location.href.slice(0,20) + ":8080");
+	socket.on("welcome",function(data){
+			socket.emit("username",{name:prompt(JSON.stringify(data))});
+	});
 
-
-gyro.frequency = 500;
+gyro.frequency = 5;
 gyro.startTracking(function(g){
 	var f = document.getElementById("gyro");
 	var v = document.getElementById("visu")
