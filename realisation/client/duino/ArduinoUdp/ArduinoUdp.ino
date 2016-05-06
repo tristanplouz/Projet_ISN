@@ -3,8 +3,8 @@
 #include <WiFiUdp.h>
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "Bbox-988BAE";
-char pass[] = "D69A269D33";
+char ssid[] = "";
+char pass[] = "";
 unsigned int localPort = 5678;
 
 char packetBuffer[255];
