@@ -14,8 +14,9 @@ var server = http.createServer();
 
 // Chargement de socket.io
 var io = require('socket.io').listen(server);
-var arduinoDisp={arduino:["une","deux"]};
+var arduinoDisp={};
 var connected =[];
+var PORT=5678
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (client) {
 	console.log(JSON.stringify(connected.toString()));
@@ -39,7 +40,18 @@ io.sockets.on('connection', function (client) {
 		
 	});
 });
-
+udp.on('message', function (message, remote) {
+    console.log(remote.address + ':' + remote.port +' - ' + message);
+    if(message=="NEWCO"){
+	    arduinoDisp.push({"ip":remote.address});
+    }
+    udp.send("HELLO", 0, 5, PORT, remote.address, function(err, bytes) {
+    if (err) throw err;
+    console.log('UDP message sent to ' + remote.address +':'+ PORT);
+    udp.close();
+});
+});
+udp.bind(5678);
 server.listen(8080);
 
 console.log("Server listen at "+server.address().port);
