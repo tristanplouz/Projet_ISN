@@ -14,21 +14,39 @@ var server = http.createServer();
 
 // Chargement de socket.io
 var io = require('socket.io').listen(server);
-var arduinoDisp={};
-var connected =[];
-var PORT=5678
+var arduinoDisp=[{"ip":"0.0.0.0","name":"exemple"}];
+var connected =[];//.id .name .duino
+var PORT=5678;
+
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (client) {
-	console.log(JSON.stringify(connected.toString()));
+    var indice;
 	var code=client.id,pseudo;
 	client.emit('welcome', "Quel est votre pseudo:");
 	client.on("username",function(data){
 		pseudo=data.name;
 		connected.push({id :code,name:pseudo});
-		console.log("Un client est connecté ! Il s'agit de " + connected[connected.length-1].id+ " appelé " +connected[connected.length-1].name);
+		client.emit("duino",arduinoDisp);
+		client.on("duino",function(data){
+			connected[connected.length-1].duino=data;
+			console.log("Un client est connecté ! Il s'agit de " + connected[connected.length-1].id+ " appelé " +connected[connected.length-1].name+" sur la duino nommé "+arduinoDisp[connected[connected.length-1].duino].name);
+
+		});
+
 	});
     client.on("gyro",function(data){
+		for(var i =0;i<connected.length;i++){
+			if(connected[i].id==client.id){
+				indice=i;
+			}
+		}
 		console.log(pseudo+ ":"+data.beta+" at "+code);
+		
+		udp.send(decode(data),0,1,PORT,arduinoDisp[connected[i].duino].ip,function(err,bytes){
+		    if (err){
+			client.emit("err","Votre duino ne repond plus, essayer de trouver votre robot et de le redemarer");
+		    };
+		    });
 	});
     client.on("disconnect",function(e){
 		for(var i =0;i<connected.length;i++){
@@ -46,12 +64,21 @@ udp.on('message', function (message, remote) {
 	    arduinoDisp.push({"ip":remote.address});
     }
     udp.send("HELLO", 0, 5, PORT, remote.address, function(err, bytes) {
-    if (err) throw err;
-    console.log('UDP message sent to ' + remote.address +':'+ PORT);
-    udp.close();
+	if (err) throw err;
+	console.log('UDP message sent to ' + remote.address +':'+ PORT);
+	udp.close();
+    });
 });
-});
-udp.bind(5678);
+udp.bind(PORT);
 server.listen(8080);
 
 console.log("Server listen at "+server.address().port);
+function decode(data){
+    if(data.gamma>500){
+	dir=1;
+    }
+    else{
+	dir = 5;
+    }
+    return dir;//1 avance 2 recule 3 gauche 4 droite 5 stop
+    }
