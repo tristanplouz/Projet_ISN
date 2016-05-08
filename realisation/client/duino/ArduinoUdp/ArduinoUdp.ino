@@ -3,8 +3,8 @@
 #include <WiFiUdp.h>
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "tristan-PC";
+char pass[] = "wRq8FTlt";
 unsigned int localPort = 5678;
 
 char packetBuffer[255];
@@ -12,7 +12,14 @@ char HelloBuffer[] = "helloa01";
 
 WiFiUDP Udp;
 
+int dirA = 2,
+    dirB = 4,
+    pwmA = 3,
+    pwmB = 5;
+
 void setup() {
+  initH();
+
   Serial.begin(9600);
   while (!Serial) {
     ;
@@ -32,20 +39,21 @@ void setup() {
     Serial.print("Tentative de connexion au reseau wifi : ");
     Serial.println(ssid);
     status = WiFi.begin(ssid, pass);
-    delay(10000);
+    delay(5000);
   }
   Serial.println("Connecté au réseau wifi");
   printWifiStatus();
 
-  Serial.println("\nTentative de connexion au serveur...");
+  Serial.println("\nTentative d'ouverture du socket...");
   while (!Udp.begin(localPort)) {
-    Serial.println("Echec de connxion au serveur");
+    Serial.println("Echec");
     delay(2000);
   }
-  Serial.println("Connecté au serveur");
+  Serial.println("Socket ouvert, la communication peut commencer");
 
   Serial.println("\nEnvoi du packet hello");
-  Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+  Serial.println(Udp.remoteIP());
+  Udp.beginPacket("10.42.0.255", localPort);
   Udp.write(HelloBuffer);
   if (Udp.endPacket()) {
     Serial.println("Packet envoyé");
@@ -73,20 +81,27 @@ void loop() {
 
     if (String(packetBuffer) == "1") {
       forward(255);
+      delay(1);
     }
-    else if (String(packetBuffer) == "2") {
-      back(255);
+    if (String(packetBuffer) == "2") {
+        back(255);
+      delay(1);
     }
-    else if (String(packetBuffer) == "3") {
+    if (String(packetBuffer) == "4") {
       right(255);
+      delay(1);
     }
-    else if (String(packetBuffer) == "4") {
+    if (String(packetBuffer) == "3") {
       left(255);
+      delay(1);
     }
-    else if (String(packetBuffer) == "5") {
+    if (String(packetBuffer) == "5") {
       halt();
+      delay(1);
     }
+
   }
+  delay(10);
 }
 
 
@@ -151,7 +166,13 @@ void halt() {
   digitalWrite(9, HIGH);
   digitalWrite(8, HIGH);
 }
+void initH() {
+  pinMode(dirA, OUTPUT);
+  pinMode(dirB, OUTPUT);
+  pinMode(pwmA, OUTPUT);
+  pinMode(pwmB, OUTPUT);
+  pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT);
 
-
-
-
+  //halt();
+}
