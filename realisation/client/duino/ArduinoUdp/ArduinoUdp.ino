@@ -3,8 +3,8 @@
 #include <WiFiUdp.h>
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "";
-char pass[] = "";
+char ssid[] = "tristan-PC";
+char pass[] = "wRq8FTlt";
 unsigned int localPort = 5678;
 
 char packetBuffer[255];
@@ -84,7 +84,7 @@ void loop() {
     }
     if (String(packetBuffer) == "2") {
         back(255);
-      delay(1
+      delay(1);
     }
     if (String(packetBuffer) == "4") {
       right(255);
