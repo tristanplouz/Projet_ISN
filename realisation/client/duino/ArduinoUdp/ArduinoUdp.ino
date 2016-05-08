@@ -10,6 +10,11 @@ unsigned int localPort = 5678;
 char packetBuffer[255];
 char HelloBuffer[] = "helloa01";
 
+int dirA = 12,
+    dirB = 13,
+    pwmA = 3,
+    pwmB = 11;
+
 WiFiUDP Udp;
 
 void setup() {
@@ -34,12 +39,12 @@ void setup() {
     status = WiFi.begin(ssid, pass);
     delay(10000);
   }
-  Serial.println("Connecté au réseau wifi");
+  Serial.println("Connecte au reseau wifi");
   printWifiStatus();
 
   Serial.println("\nTentative de connexion au serveur...");
   while (!Udp.begin(localPort)) {
-    Serial.println("Echec de connxion au serveur");
+    Serial.println("Echec de connexion au serveur");
     delay(2000);
   }
   Serial.println("Connecté au serveur");
@@ -48,7 +53,7 @@ void setup() {
   Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
   Udp.write(HelloBuffer);
   if (Udp.endPacket()) {
-    Serial.println("Packet envoyé");
+    Serial.println("Packet envoye");
   }
 }
 
@@ -99,7 +104,7 @@ void printWifiStatus() {
   Serial.println(ip);
 
   long rssi = WiFi.RSSI();
-  Serial.print("Intensité du signal : ");
+  Serial.print("Intensite du signal : ");
   Serial.print(rssi);
   Serial.println(" dBm");
 }
