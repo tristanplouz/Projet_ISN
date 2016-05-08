@@ -53,7 +53,7 @@ void setup() {
 
   Serial.println("\nEnvoi du packet hello");
   Serial.println(Udp.remoteIP());
-  Udp.beginPacket("10.42.0.255", localPort);
+  Udp.beginPacket("10.42.0.255", localPort);//Faire un script pour mettre l'ip de broadcast automatiquement
   Udp.write(HelloBuffer);
   if (Udp.endPacket()) {
     Serial.println("Packet envoyé");
@@ -168,7 +168,7 @@ void initH() {
   pinMode(pwmB, OUTPUT);
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
-
+}
 
 
 
