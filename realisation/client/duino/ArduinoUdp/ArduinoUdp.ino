@@ -3,8 +3,8 @@
 #include <WiFiUdp.h>
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "tristan-PC";
-char pass[] = "wRq8FTlt";
+char ssid[] = "isn";
+char pass[] = "";
 unsigned int localPort = 5678;
 
 char packetBuffer[255];
@@ -13,9 +13,9 @@ char HelloBuffer[] = "helloa01";
 WiFiUDP Udp;
 
 int dirA = 2,
-    dirB = 4,
-    pwmA = 3,
-    pwmB = 5;
+dirB = 4,
+pwmA = 3,
+pwmB = 5;
 
 void setup() {
   initH();
@@ -38,10 +38,10 @@ void setup() {
   while (status != WL_CONNECTED) {
     Serial.print("Tentative de connexion au reseau wifi : ");
     Serial.println(ssid);
-    status = WiFi.begin(ssid, pass);
+    status = WiFi.begin(ssid);
     delay(5000);
   }
-  Serial.println("Connecté au réseau wifi");
+  Serial.println("Connecte au réseau wifi");
   printWifiStatus();
 
   Serial.println("\nTentative d'ouverture du socket...");
@@ -56,7 +56,7 @@ void setup() {
   Udp.beginPacket("10.42.0.255", localPort);//Faire un script pour mettre l'ip de broadcast automatiquement
   Udp.write(HelloBuffer);
   if (Udp.endPacket()) {
-    Serial.println("Packet envoyé");
+    Serial.println("Packet envoye");
   }
 }
 
@@ -83,7 +83,7 @@ void loop() {
       forward(255);
     }
     if (String(packetBuffer) == "2") {
-        back(255);
+      back(255);
       delay(1);
     }
     if (String(packetBuffer) == "4") {
@@ -109,7 +109,7 @@ void printWifiStatus() {
   Serial.println(ip);
 
   long rssi = WiFi.RSSI();
-  Serial.print("Intensité du signal : ");
+  Serial.print("Intensite du signal : ");
   Serial.print(rssi);
   Serial.println(" dBm");
 }
@@ -169,6 +169,7 @@ void initH() {
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
 }
+
 
 
 
