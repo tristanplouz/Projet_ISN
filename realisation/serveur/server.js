@@ -61,6 +61,14 @@ io.sockets.on('connection', function (client) {
 		    }
 		}
 	});
+    client.on("fire",function(data){
+	var toSend=new Buffer(String(10));
+	udp.send(toSend,0,toSend.length,PORT,arduinoDisp[connected[indice].duino].ip,function(err,bytes){
+			    if (err){
+				client.emit("err","Votre duino ne repond plus, essayer de trouver votre robot et de le redemarer");
+			    }
+			});
+		    });
     client.on("disconnect",function(e){
 		for(var i =0;i<connected.length;i++){
 			if(connected[i].id==client.id){

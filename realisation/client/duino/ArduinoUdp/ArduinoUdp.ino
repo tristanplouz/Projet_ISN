@@ -3,8 +3,8 @@
 #include <WiFiUdp.h>
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "isn";
-char pass[] = "";
+char ssid[] = "tristan-PC";
+char pass[] = "wRq8FTlt";
 unsigned int localPort = 5678;
 
 char packetBuffer[255];
@@ -16,6 +16,9 @@ int dirA = 2,
 dirB = 4,
 pwmA = 3,
 pwmB = 5;
+
+int laserOn=0;
+long lsttime,timeout=2000;
 
 void setup() {
   initH();
@@ -38,7 +41,7 @@ void setup() {
   while (status != WL_CONNECTED) {
     Serial.print("Tentative de connexion au reseau wifi : ");
     Serial.println(ssid);
-    status = WiFi.begin(ssid);
+    status = WiFi.begin(ssid,pass);
     delay(5000);
   }
   Serial.println("Connecte au réseau wifi");
@@ -64,20 +67,20 @@ void loop() {
 
   int packetSize = Udp.parsePacket();
   if (packetSize) {
-    Serial.print("\nPacket UDP recu, Taille : ");
-    Serial.println(packetSize);
-    Serial.print("Emetteur : ");
+    //Serial.print("\nPacket UDP recu, Taille : ");
+    //Serial.println(packetSize);
+    //Serial.print("Emetteur : ");
     IPAddress remoteIp = Udp.remoteIP();
-    Serial.print(remoteIp);
-    Serial.print(", Port : ");
-    Serial.println(Udp.remotePort());
+    //Serial.print(remoteIp);
+    //Serial.print(", Port : ");
+    //Serial.println(Udp.remotePort());
 
     int len = Udp.read(packetBuffer, 255);
     if (len > 0) {
       packetBuffer[len] = 0;
     }
-    Serial.println("Contenu : ");
-    Serial.println(String(packetBuffer));
+    //Serial.println("Contenu : ");
+    //Serial.println(String(packetBuffer));
 
     if (String(packetBuffer) == "1") {
       forward(255);
@@ -95,6 +98,12 @@ void loop() {
     if (String(packetBuffer) == "5") {
       halt();
     }
+     if (String(packetBuffer) == "10") {
+      laserOn=1;
+      Serial.println("FEU");
+      lsttime=millis();
+    }
+    laser();
   }
   delay(10);
 }
@@ -115,9 +124,9 @@ void printWifiStatus() {
 }
 
 void forward(int vit) {
-  Serial.println("Avance !");
+  //Serial.println("Avance !");
   digitalWrite(9, LOW);
-  digitalWrite(8, LOW);
+
   digitalWrite(dirA, LOW);
   digitalWrite(dirB, LOW);
   analogWrite(pwmA, vit);
@@ -125,9 +134,9 @@ void forward(int vit) {
 }
 
 void right(int vit) {
-  Serial.println("Droite !");
+  //Serial.println("Droite !");
   digitalWrite(9, LOW);
-  digitalWrite(8, LOW);
+
   digitalWrite(dirA, HIGH);
   digitalWrite(dirB, LOW);
   analogWrite(pwmA, vit);
@@ -135,9 +144,9 @@ void right(int vit) {
 }
 
 void left(int vit) {
-  Serial.println("Gauche !");
+  //Serial.println("Gauche !");
   digitalWrite(9, LOW);
-  digitalWrite(8, LOW);
+
   digitalWrite(dirA, LOW);
   digitalWrite(dirB, HIGH);
   analogWrite(pwmA, vit);
@@ -145,9 +154,9 @@ void left(int vit) {
 }
 
 void back(int vit) {
-  Serial.println("Recule !");
+  //Serial.println("Recule !");
   digitalWrite(9, LOW);
-  digitalWrite(8, LOW);
+
   digitalWrite(dirA, HIGH);
   digitalWrite(dirB, HIGH);
   analogWrite(pwmA, vit);
@@ -155,11 +164,11 @@ void back(int vit) {
 }
 
 void halt() {
-  Serial.println("Arret !");
+  //Serial.println("Arret !");
   analogWrite(pwmA, 0);
   analogWrite(pwmB, 0);
   digitalWrite(9, HIGH);
-  digitalWrite(8, HIGH);
+
 }
 void initH() {
   pinMode(dirA, OUTPUT);
@@ -168,8 +177,23 @@ void initH() {
   pinMode(pwmB, OUTPUT);
   pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
+  digitalWrite(8,LOW);
 }
-
+void laser(){
+    long somme =lsttime+timeout;
+    if(laserOn==1 && millis()<somme){
+        digitalWrite(8,HIGH); 
+         Serial.print("millis: ");  
+        Serial.println(millis());   
+                 Serial.print("somme: ");  
+        Serial.println(somme);  
+    }
+    if(laserOn==1&&millis()>somme){
+        digitalWrite(8,LOW);
+        laserOn=0;
+        lsttime=0;
+     }
+}
 
 
 
