@@ -3,11 +3,25 @@
 	<head>
 		<title></title>
 		<meta charset="utf-8" />
+		<link rel="stylesheet" type="text/css" href="css/style1.css">
 	</head>
 	<body>
-		<div id="gyro"></div>
+		<section id="dispo">
+			<header>
+				<h1 class="head">Choisisez votre robot !</h1>
+				<form  class="head">
+					<span> Nom de joueur : </span>
+					<input id="username"></input>
+				</form>
+			</header>
+			<div id="robot">
+			</div>
+		</section>
+
+		<section id="gyro">
 		<div id="visu" style="height:250px; width:40%; background-color:blue; margin: auto;"></div>
-		<button type="button" onclick="socket.emit('fire', 1)">Click Me!</button> 
+		</section>
+
 	</body>
 	<script type="text/javascript" src="libs/socket.io.js"></script>
 	<script type="text/javascript" src="libs/gyro.js"></script>
