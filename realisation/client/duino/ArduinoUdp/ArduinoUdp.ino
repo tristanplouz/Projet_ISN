@@ -8,7 +8,7 @@ char pass[] = "wRq8FTlt";
 unsigned int localPort = 5678;
 
 char packetBuffer[255];
-char HelloBuffer[] = "helloa01";
+char HelloBuffer[] = "helloa02";
 
 WiFiUDP Udp;
 

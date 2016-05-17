@@ -20,6 +20,7 @@ var PORT=5678;
 
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (client) {
+    console.log('new');
     var indice;
     var code=client.id,pseudo;
     client.emit("available",arduinoDisp);
@@ -34,11 +35,11 @@ io.sockets.on('connection', function (client) {
 		client.emit("start");
 	    }else{
 		client.emit("err","Arduino deja prise, actualisé et prenez en une autre");
-		console.log("arduino nbr:"+data.arduino);
+		console.log(data.arduino +"est deja prise, ECHEC");
 	    }
 	}else{
 	    client.emit("err","Arduino inexistante, actualisé et prenez en une autre");
-	    console.log("arduino nbr:"+data.arduino);
+	    console.log(data.arduino +"est inexistante, ECHEC");
 	}
     });
     client.on("gyro",function(data){
@@ -47,7 +48,7 @@ io.sockets.on('connection', function (client) {
 			indice=i;
 		}
 	}
-	//console.log(pseudo+ ":"+data.beta+" at "+code);
+	console.log(pseudo+ ":"+data.beta+" at "+code);
 	if(connected[indice]!=undefined ){
 	    if(arduinoDisp[connected[indice].duino]!=undefined){
 		var toSend=decode(data);
@@ -114,4 +115,4 @@ function decode(data){
 	dir = 5;
     }
     return new Buffer(dir.toString());//1 avance 2 recule 3 gauche 4 droite 5 stop
-    }
+}
