@@ -20,70 +20,62 @@ var PORT=5678;
 
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (client) {
-	var indice;
-	var code=client.id,pseudo;
-	client.emit('welcome', "Quel est votre pseudo:");
-	client.on("username",function(data){
-		pseudo=data.name;
-		connected.push({id :code,name:pseudo});
-		client.emit("duino",arduinoDisp);
-		client.on("duino",function(data){
-		    if(data<arduinoDisp.length){
-			if(!arduinoDisp[data].occup){
-			    connected[connected.length-1].duino=data;
-			    try {arduinoDisp[data].occup=1;}
-			    catch(err){;}
-			    console.log("Un client est connecté ! Il s'agit de " + connected[connected.length-1].id+ " appelé " +connected[connected.length-1].name+" sur la duino nommé "+arduinoDisp[connected[connected.length-1].duino].name);
-			}else{
-			    client.emit("err","Arduino deja prise, actualisé et prenez en une autre");
-			    }
-		    }else{
-			client.emit("err","Arduino inexistante, actualisé et prenez en une autre");
+    var indice;
+    var code=client.id,pseudo;
+    client.emit("available",arduinoDisp);
+    client.on("login",function(data){ //data={"name":"","arduino":nbr}
+	pseudo=data.name;
+	if(data.arduino<arduinoDisp.length){
+	    if(!arduinoDisp[data.arduino].occup){
+		connected[connected.length-1].duino=data.arduino;
+		arduinoDisp[connected[connected.length-1].duino].occup=1;
+		console.log("Un client est connecté ! Il s'agit de " + connected[connected.length-1].id+ " appelé " +connected[connected.length-1].name+" sur la duino nommé "+arduinoDisp[connected[connected.length-1].duino].name);
+		client.emit("start");
+	    }else{
+		client.emit("err","Arduino deja prise, actualisé et prenez en une autre");
+	    }
+	}else{
+	    client.emit("err","Arduino inexistante, actualisé et prenez en une autre");
+	}
+    });
+    client.on("gyro",function(data){
+	for(var i =0;i<connected.length;i++){
+		if(connected[i].id==client.id){
+			indice=i;
+		}
+	}
+	//console.log(pseudo+ ":"+data.beta+" at "+code);
+	if(connected[indice]!=undefined ){
+	    if(arduinoDisp[connected[indice].duino]!=undefined){
+		var toSend=decode(data);
+		udp.send(toSend,0,toSend.length,PORT,arduinoDisp[connected[indice].duino].ip,function(err,bytes){
+		    if (err){
+			client.emit("err","Votre duino ne repond plus, essayer de trouver votre robot et de le redemarer");
 		    }
 		});
-
-	});
-    client.on("gyro",function(data){
-		for(var i =0;i<connected.length;i++){
-			if(connected[i].id==client.id){
-				indice=i;
-			}
-		}
-		//console.log(pseudo+ ":"+data.beta+" at "+code);
-		if(connected[indice]!=undefined ){
-		    if(arduinoDisp[connected[indice].duino]!=undefined){
-			var toSend=decode(data);
-			udp.send(toSend,0,toSend.length,PORT,arduinoDisp[connected[indice].duino].ip,function(err,bytes){
-			    if (err){
-				client.emit("err","Votre duino ne repond plus, essayer de trouver votre robot et de le redemarer");
-			    }
-			});
-		    }
-		}
-	});
+	    }
+	}
+    });
     client.on("fire",function(data){
 	var toSend=new Buffer(String(10));
 	udp.send(toSend,0,toSend.length,PORT,arduinoDisp[connected[indice].duino].ip,function(err,bytes){
-			    if (err){
-				client.emit("err","Votre duino ne repond plus, essayer de trouver votre robot et de le redemarer");
-			    }
-			});
-		    });
-    client.on("disconnect",function(e){
-		for(var i =0;i<connected.length;i++){
-			if(connected[i].id==client.id){
-				console.log("deconnection de "+connected[i].name);
-				
-				try{ arduinoDisp[connected[i].duino].occup=0;}
-				catch(err){
-				    console.log(err);
-				    }
-				
-				connected.splice(i,1);	
-			}
-		}
-		
+	    if (err){
+		client.emit("err","Votre duino ne repond plus, essayer de trouver votre robot et de le redemarer");
+	    }
 	});
+    });
+    client.on("disconnect",function(e){
+	for(var i =0;i<connected.length;i++){
+	    if(connected[i].id==client.id){
+		console.log("deconnection de "+connected[i].name);
+		try{ arduinoDisp[connected[i].duino].occup=0;}
+		catch(err){
+		    console.log(err);
+		}
+	    connected.splice(i,1);	
+	    }
+	}
+    });
 });
 udp.on('message', function (message, remote) {
     message=message.toString();
