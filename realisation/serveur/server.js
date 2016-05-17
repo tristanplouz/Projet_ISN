@@ -25,6 +25,7 @@ io.sockets.on('connection', function (client) {
     client.emit("available",arduinoDisp);
     client.on("login",function(data){ //data={"name":"","arduino":nbr}
 	pseudo=data.name;
+	connected.push({"id" :code,"name":pseudo});
 	if(data.arduino<arduinoDisp.length){
 	    if(!arduinoDisp[data.arduino].occup){
 		connected[connected.length-1].duino=data.arduino;
@@ -33,9 +34,11 @@ io.sockets.on('connection', function (client) {
 		client.emit("start");
 	    }else{
 		client.emit("err","Arduino deja prise, actualisé et prenez en une autre");
+		console.log("arduino nbr:"+data.arduino);
 	    }
 	}else{
 	    client.emit("err","Arduino inexistante, actualisé et prenez en une autre");
+	    console.log("arduino nbr:"+data.arduino);
 	}
     });
     client.on("gyro",function(data){

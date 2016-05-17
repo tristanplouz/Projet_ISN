@@ -42,7 +42,7 @@ socket.on("start",function(){
 
 function choix (name) {
 	if(p.value != ""){
-		socket.emit("login",{name:value, duino:name});
+		socket.emit("login",{name:p.value, arduino:name});
 		d.style.display = "none";
 		g.style.display = "block";
 	}
