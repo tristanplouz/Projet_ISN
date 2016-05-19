@@ -37,6 +37,12 @@ gyro.startTracking(function(g){
 		"<p>beta : "+g.beta+"</p>"+
 		"<p>gamma : "+g.gamma+"</p>";
 	v.style.transform = "rotate("+g.beta+"deg)";
+	if(g.gamma>-30 && g.gamma<0){
+        	v.style.transform = "translate(50%)";
+    	}
+    	if(g.gamma>-90 && g.gamma<-75){
+        	v.style.transform = "translate(-50%)";
+    	}
 	if(g.alpha==undefined &&g.beta == undefined && g.gamma==undefined){
 		//alert("Aucun gyroscope détecté\nEssayer Chrome sur mobile (très recommandé)");
 		console.log("rien");
