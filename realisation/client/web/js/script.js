@@ -37,10 +37,11 @@ gyro.startTracking(function(g){
 		"<p>beta : "+g.beta+"</p>"+
 		"<p>gamma : "+g.gamma+"</p>";
 	v.style.transform = "rotate("+g.beta+"deg)";
-	if(!g.alpha&&!g.beta&&!g.gamma){
-		gyro.stopTracking();
-		alert("Aucun gyroscope détecté\nEssayer Chrome sur mobile (très recommandé)");
-	}
+	if(g.alpha==undefined &&g.beta == undefined && g.gamma==undefined){
+		//alert("Aucun gyroscope détecté\nEssayer Chrome sur mobile (très recommandé)");
+		console.log("rien");
+		console.log(g.alpha);	
+}
 	if(connect){
 		socket.emit("gyro", {"alpha":g.alpha, "beta":g.beta, "gamma":g.gamma});
 	}
