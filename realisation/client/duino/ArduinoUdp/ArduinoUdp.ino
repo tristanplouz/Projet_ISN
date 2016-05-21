@@ -3,19 +3,20 @@
 #include <WiFiUdp.h>
 
 int status = WL_IDLE_STATUS;
-char ssid[] = "tristan-PC";
+//Information du reseau wifi
+char ssid[] = "tristan-PC"; 
 char pass[] = "wRq8FTlt";
-unsigned int localPort = 5678;
+unsigned int localPort = 5678; //Port UDP
 
 char packetBuffer[255];
-char HelloBuffer[] = "helloa02";
+char HelloBuffer[] = "helloa02"; //packet d'initialisation "hello+nom"
 
 WiFiUDP Udp;
 
-int dirA = 2,
-dirB = 4,
-pwmA = 3,
-pwmB = 5;
+int dirA = 2; // sens Moteur A 
+int dirB = 4; // sens Moteur B
+int pwmA = 3; //vitesse Moteur A
+int pwmB = 5; //vitesse Moteur B
 
 int laserOn=0;
 long lsttime,timeout=2000;
@@ -52,7 +53,7 @@ void setup() {
     Serial.println("Echec");
     delay(2000);
   }
-  Serial.println("Socket ouvert, la communication peut commencer");
+  Serial.println("Socket ouverte, la communication peut commencer");
 
   Serial.println("\nEnvoi du packet hello");
   Serial.println(Udp.remoteIP());
@@ -75,42 +76,45 @@ void loop() {
     //Serial.print(", Port : ");
     //Serial.println(Udp.remotePort());
 
-    int len = Udp.read(packetBuffer, 255);
+    int len = Udp.read(packetBuffer, 255); //Reception des Données
     if (len > 0) {
       packetBuffer[len] = 0;
     }
     //Serial.println("Contenu : ");
     //Serial.println(String(packetBuffer));
 
-    if (String(packetBuffer) == "1") {
+    if (String(packetBuffer) == "1") { //1:avance 
       forward(255);
     }
-    if (String(packetBuffer) == "2") {
+    if (String(packetBuffer) == "2") {//2:recule
       back(255);
-      delay(1);
     }
-    if (String(packetBuffer) == "4") {
-      right(255);
+    if (String(packetBuffer) == "4") {//4:droite
+      right(200);
     }
-    if (String(packetBuffer) == "3") {
-      left(255);
+    if (String(packetBuffer) == "3") {//3:gauche
+      left(2010);
     }
-    if (String(packetBuffer) == "5") {
+    if (String(packetBuffer) == "5") {//5:Stop
       halt();
     }
-     if (String(packetBuffer) == "10") {
+     if (String(packetBuffer) == "10") {//10:laser
       laserOn=1;
       Serial.println("FEU");
       lsttime=millis();
     }
     laser();
   }
-  delay(10);
+  delay(10); //Pour la stabilité
 }
-
+/********************************************
+ Fonction d'initialisation
+ * printWifiStatus() pour log les infos wifi
+ * initH() pour initialiser les pins
+ ********************************************/
 
 void printWifiStatus() {
-  Serial.print("SSID : ");
+  Serial.print("SSID : "); //Log dans la console
   Serial.println(WiFi.SSID());
 
   IPAddress ip = WiFi.localIP();
@@ -123,10 +127,25 @@ void printWifiStatus() {
   Serial.println(" dBm");
 }
 
+void initH() {
+  pinMode(dirA, OUTPUT);
+  pinMode(dirB, OUTPUT);
+  pinMode(pwmA, OUTPUT);
+  pinMode(pwmB, OUTPUT);
+}
+
+/***************************************
+Fonction du robot:
+ * forward(vitesse) pour avancer
+ * right(vitesse) pour tourner à droite
+ * left(vitesse) pour tourner à gauche
+ * back(vitesse) pour reculer
+ * halt() pour s'arreter
+ * laser() pour tirer
+ **************************************/
+ 
 void forward(int vit) {
   //Serial.println("Avance !");
-  digitalWrite(9, LOW);
-
   digitalWrite(dirA, LOW);
   digitalWrite(dirB, LOW);
   analogWrite(pwmA, vit);
@@ -135,8 +154,6 @@ void forward(int vit) {
 
 void right(int vit) {
   //Serial.println("Droite !");
-  digitalWrite(9, LOW);
-
   digitalWrite(dirA, HIGH);
   digitalWrite(dirB, LOW);
   analogWrite(pwmA, vit);
@@ -145,8 +162,6 @@ void right(int vit) {
 
 void left(int vit) {
   //Serial.println("Gauche !");
-  digitalWrite(9, LOW);
-
   digitalWrite(dirA, LOW);
   digitalWrite(dirB, HIGH);
   analogWrite(pwmA, vit);
@@ -155,8 +170,6 @@ void left(int vit) {
 
 void back(int vit) {
   //Serial.println("Recule !");
-  digitalWrite(9, LOW);
-
   digitalWrite(dirA, HIGH);
   digitalWrite(dirB, HIGH);
   analogWrite(pwmA, vit);
@@ -167,18 +180,8 @@ void halt() {
   //Serial.println("Arret !");
   analogWrite(pwmA, 0);
   analogWrite(pwmB, 0);
-  digitalWrite(9, HIGH);
-
-}
-void initH() {
-  pinMode(dirA, OUTPUT);
-  pinMode(dirB, OUTPUT);
-  pinMode(pwmA, OUTPUT);
-  pinMode(pwmB, OUTPUT);
-  pinMode(8, OUTPUT);
-  pinMode(9, OUTPUT);
-  digitalWrite(8,LOW);
-}
+ }
+ 
 void laser(){
     long somme =lsttime+timeout;
     if(laserOn==1 && millis()<somme){

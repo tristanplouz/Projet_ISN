@@ -1,9 +1,10 @@
-var socket = io.connect(document.location.href.slice(0,20) + ":8080");
-
+var socket = io.connect(document.location.href.slice(0,20) + ":8080"); //Connection websocket sur le port 8080
+//Definition de partie HTML a injecter
 var divArdu1="<a class='arduino' onclick=choix('";
 var divArdu2="')> <span>ROBOT</span> <span class='num'>";
 var divArdu3="</span> </a>";
 
+//Recuperation d'element
 var d = document.getElementById('dispo');
 var r = document.getElementById('robot');
 var p = document.getElementById('username');
@@ -25,7 +26,7 @@ socket.on("err",function(data){
 });
 
 
-gyro.frequency = 100;
+gyro.frequency = 100; //Temps d'attente entre chaques mesures
 
 socket.on("start",function(){
 	connect=1;
@@ -40,21 +41,16 @@ gyro.startTracking(function(g){
 	if(g.gamma>-30 && g.gamma<0){
         	v.style.transform = "translate(50%)";
     	}
-    	if(g.gamma>-90 && g.gamma<-75){
+    if(g.gamma>-90 && g.gamma<-75){
         	v.style.transform = "translate(-50%)";
     	}
-	if(g.alpha==undefined &&g.beta == undefined && g.gamma==undefined){
-		//alert("Aucun gyroscope détecté\nEssayer Chrome sur mobile (très recommandé)");
-		console.log("rien");
-		console.log(g.alpha);	
-}
 	if(connect){
 		socket.emit("gyro", {"alpha":g.alpha, "beta":g.beta, "gamma":g.gamma});
 	}
 });
 
 
-function choix (name) {
+function choix (name) {//Envoi des informations de connection
 	if(p.value != ""){
 		socket.emit("login",{name:p.value, arduino:name});
 		d.style.display = "none";
@@ -62,7 +58,7 @@ function choix (name) {
 	}
 }
 
-function checkBrowser(){
+function checkBrowser(){//Verification du navigateur
 	var browser = navigator.userAgent;
 	if(browser.indexOf("Chrome")==-1 ){
 		alert("Utiliser Chrome s'il vous plait");
