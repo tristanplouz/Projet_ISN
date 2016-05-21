@@ -2,33 +2,42 @@ body{
 	background-color: #686868;
 	font-size: 5vw;
 	font-family: "lucida console";
-}
-h1 {
-    text-transform: uppercase;
+	height: 100%;
+	width: 97%;
+	left: auto;
 }
 input {
 	display: block;
 	font-size: 5vw;
 }
 header{
-	padding: 1.5%;
+	padding: 1%;
 	margin: 0.5%;
 	background-color: #abdb8e;
 	box-shadow: 3px 3px 0px white;
 }
 .head{
 	display: inline-block;
-	margin: 0;
-	padding: 0;
+	margin: 0%;
+	padding: 0%;
+	margin-top: 0%;
+}
+h1 {
+    text-transform: uppercase;
+    margin-top: 0%;
+    margin: 0%;
+    text-align: center;
 }
 #robot{
-	padding: 1.5%;
+	padding: 1%;
 	margin: 0.5%;
+	margin-top: 2%;
 	background-color: #abdb8e;
 	box-shadow: 3px 3px 0px white;
 }
 #robot span{
 	display: block;
+	margin-top: 0%; 
 }
 .arduino{
 	background-color: white;
