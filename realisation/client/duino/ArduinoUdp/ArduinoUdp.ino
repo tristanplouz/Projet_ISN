@@ -6,6 +6,7 @@ int status = WL_IDLE_STATUS;
 //Information du reseau wifi
 char ssid[] = "tristan-PC"; 
 char pass[] = "wRq8FTlt";
+String ipBroadcast="10.42.0.255";
 unsigned int localPort = 5678; //Port UDP
 
 char packetBuffer[255];
@@ -57,7 +58,7 @@ void setup() {
 
   Serial.println("\nEnvoi du packet hello");
   Serial.println(Udp.remoteIP());
-  Udp.beginPacket("10.42.0.255", localPort);//Faire un script pour mettre l'ip de broadcast automatiquement
+  Udp.beginPacket(ipBroadcast, localPort);
   Udp.write(HelloBuffer);
   if (Udp.endPacket()) {
     Serial.println("Packet envoye");

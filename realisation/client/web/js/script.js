@@ -13,6 +13,7 @@ var v = document.getElementById("visu");
 
 var connect=0;
 checkBrowser();
+
 socket.on("available",function(data){
 	for(var i = 0; i < data.length; i++){
 		if(!data[i].occup){
