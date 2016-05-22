@@ -22,7 +22,7 @@ var connected =[];//.id .name .duino
 var PORT=5678;//Port UDP
 
 // Definition des constantes
-const var droite = 4,gauche= 3,avance=1,recule=2,stop=5; 
+const droite = 4,gauche= 3,avance=1,recule=2,stop=5; 
 
 // Quand un client se connecte, on le note dans la console
 io.sockets.on('connection', function (client) {
