@@ -39,10 +39,10 @@ gyro.startTracking(function(g){
 		"<p>gamma : "+g.gamma+"</p>";
 	v.style.transform = "rotate("+g.beta+"deg)";
 	if(g.gamma>-30 && g.gamma<0){
-        	v.style.transform = "translate(50%)";
+        	v.style.transform = "translate(0,-50%)";
     	}
     if(g.gamma>-90 && g.gamma<-75){
-        	v.style.transform = "translate(-50%)";
+        	v.style.transform = "translate(0,50%)";
     	}
 	if(connect){
 		socket.emit("gyro", {"alpha":g.alpha, "beta":g.beta, "gamma":g.gamma});
